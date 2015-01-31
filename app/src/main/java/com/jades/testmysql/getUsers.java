@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,9 +32,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class getUsers extends Activity {
-    TextView txt;
+   // TextView txt;
     ListView listView;
     ListAdapter  listAdp;
+    User userCurrent;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +96,7 @@ public class getUsers extends Activity {
             }
             is.close();
             result=sb.toString();
-          //  Log.d(result,"ok");
+          Log.d(result,"ok");
         }catch(Exception e){
             Log.e("log_tag", "Error converting result " + e.toString());
         }
@@ -101,20 +104,25 @@ public class getUsers extends Activity {
         // Parse les données JSON
         try{
             JSONArray jArray = new JSONArray(result);
-            ArrayList<JSONObject> items = new ArrayList<>();
+            List<User> userList = new ArrayList<>();
 
             for(int i=0;i<jArray.length();i++){
+                userCurrent = new User();
                 JSONObject json_data = jArray.getJSONObject(i);
                 // Affichage ID_ville et Nom_ville dans le LogCat
                 /*Log.i("log_tag","id: "+json_data.getInt("id")+
                                 ", nom: "+json_data.getString("nom")
                 );*/
-                items.add(json_data);
+                userCurrent.setId(json_data.getInt("id"));
+                userCurrent.setNom(json_data.getString("nom"));
+                userCurrent.setPrenom(json_data.getString("prenom"));
+                userCurrent.setStatut(json_data.getString("statut"));
+                userList.add(userCurrent);
                 /*returnString += "\n\t" + jArray.getJSONObject(i);*/
             }
             listView = (ListView) findViewById(R.id.listView1);
             listAdp= new ArrayAdapter<>(this,
-                    android.R.layout.simple_list_item_1, items);
+                    android.R.layout.simple_list_item_1, userList);
             listView.setAdapter(listAdp);
             // Résultats de la requête
 
