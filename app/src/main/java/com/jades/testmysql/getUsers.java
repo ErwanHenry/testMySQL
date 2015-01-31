@@ -24,12 +24,16 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class getUsers extends Activity {
     TextView txt;
-
+    ListView listView;
+    ListAdapter  listAdp;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,31 +42,33 @@ public class getUsers extends Activity {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
+/*
         LinearLayout rootLayout = new LinearLayout(getApplicationContext());
         txt = new TextView(getApplicationContext());
         rootLayout.addView(txt);
         setContentView(rootLayout);
 
         // Définir le texte et appeler la fonction de connexion.
-        txt.setText("Connexion...");
+       txt.setText("Connexion...");
         // Appeler la méthode pour récupérer les données JSON
-        txt.setText(getServerData(strURL));
+       txt.setText(getServerData(strURL));
+       */
+        getServerData();
     }
 
     // Mettre l'adresse du script PHP
     // Attention localhost ou 127.0.0.1 ne fonctionnent pas. Mettre l'adresse IP local.
     public static final String strURL = "http://www.jadixor.com/mySQLtoAndroid.php";
 
-    private String getServerData(String returnString) {
+    private void getServerData(/*String returnString*/) {
         InputStream is = null;
         String result = "";
         // Envoyer la requête au script PHP.
         // Script PHP : $sql=mysql_query("select * from tblVille where Nom_ville like '".$_REQUEST['ville']."%'");
         // $_REQUEST['ville'] sera remplacé par L dans notre exemple.
         // Ce qui veut dire que la requête enverra les villes commençant par la lettre L
-        ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("nom","Erwa"));
+        ArrayList<NameValuePair> nameValuePairs = new ArrayList<>();
+        nameValuePairs.add(new BasicNameValuePair("nom","Henry"));
 
         // Envoie de la commande http
         try{
@@ -87,7 +93,7 @@ public class getUsers extends Activity {
             }
             is.close();
             result=sb.toString();
-            Log.d(result,"ok");
+          //  Log.d(result,"ok");
         }catch(Exception e){
             Log.e("log_tag", "Error converting result " + e.toString());
         }
@@ -95,18 +101,26 @@ public class getUsers extends Activity {
         // Parse les données JSON
         try{
             JSONArray jArray = new JSONArray(result);
+            ArrayList<JSONObject> items = new ArrayList<>();
+
             for(int i=0;i<jArray.length();i++){
                 JSONObject json_data = jArray.getJSONObject(i);
                 // Affichage ID_ville et Nom_ville dans le LogCat
-                Log.i("log_tag","id: "+json_data.getInt("id")+
+                /*Log.i("log_tag","id: "+json_data.getInt("id")+
                                 ", nom: "+json_data.getString("nom")
-                );
-                // Résultats de la requête
-                returnString += "\n\t" + jArray.getJSONObject(i);
+                );*/
+                items.add(json_data);
+                /*returnString += "\n\t" + jArray.getJSONObject(i);*/
             }
+            listView = (ListView) findViewById(R.id.listView1);
+            listAdp= new ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_1, items);
+            listView.setAdapter(listAdp);
+            // Résultats de la requête
+
         }catch(JSONException e){
             Log.e("log_tag", "Error parsing data " + e.toString());
         }
-        return returnString;
+        //return returnString;
     }
 }
