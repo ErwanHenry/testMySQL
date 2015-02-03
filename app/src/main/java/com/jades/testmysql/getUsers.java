@@ -36,6 +36,7 @@ public class getUsers extends Activity {
    // TextView txt;
     ListView listView;
     ListAdapter  listAdp;
+    List<User> userList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,7 +105,6 @@ public class getUsers extends Activity {
         // Parse les données JSON
         try{
             JSONArray jArray = new JSONArray(result);
-            List<User> userList = new ArrayList<>();
 
             for(int i=0;i<jArray.length();i++){
                 User userCurrent = new User();
@@ -143,8 +143,8 @@ public class getUsers extends Activity {
         User user = null;
         switch (view.getId()) {
             case R.id.button_add:
-               /* Intent i = new Intent(this, NewUser.class);
-                startActivity(i);*/
+               Intent i = new Intent(this, NewUser.class);
+                startActivity(i);
                 break;
             case R.id.button_remove:
                 if (listAdp.getCount() > 0) {
