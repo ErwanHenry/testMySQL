@@ -22,12 +22,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,7 +36,6 @@ public class getUsers extends Activity {
    // TextView txt;
     ListView listView;
     ListAdapter  listAdp;
-    User userCurrent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class getUsers extends Activity {
 
     // Mettre l'adresse du script PHP
     // Attention localhost ou 127.0.0.1 ne fonctionnent pas. Mettre l'adresse IP local.
-    public static final String strURL = "http://www.jadixor.com/mySQLtoAndroid.php";
+    public static final String strURL = "http://jadixor.com/mySQLtoAndroid.php";
 
     private void getServerData(/*String returnString*/) {
         InputStream is = null;
@@ -107,7 +107,7 @@ public class getUsers extends Activity {
             List<User> userList = new ArrayList<>();
 
             for(int i=0;i<jArray.length();i++){
-                userCurrent = new User();
+                User userCurrent = new User();
                 JSONObject json_data = jArray.getJSONObject(i);
                 // Affichage ID_ville et Nom_ville dans le LogCat
                 /*Log.i("log_tag","id: "+json_data.getInt("id")+
@@ -120,10 +120,7 @@ public class getUsers extends Activity {
                 userList.add(userCurrent);
                 /*returnString += "\n\t" + jArray.getJSONObject(i);*/
             }
-            listView = (ListView) findViewById(R.id.listView1);
-            listAdp= new ArrayAdapter<>(this,
-                    android.R.layout.simple_list_item_1, userList);
-            listView.setAdapter(listAdp);
+           printUsersList(userList);
             // Résultats de la requête
 
         }catch(JSONException e){
@@ -131,4 +128,37 @@ public class getUsers extends Activity {
         }
         //return returnString;
     }
+
+
+    public void printUsersList(List<User> userList){
+
+        listView = (ListView) findViewById(R.id.listView1);
+// get data from the table by the ListAdapter
+        listAdp = new ListAdapter(this, R.layout.itemlistrow, userList);
+        listView .setAdapter(listAdp);
+    }
+
+
+    public void onClick(View view) {
+        User user = null;
+        switch (view.getId()) {
+            case R.id.button_add:
+               /* Intent i = new Intent(this, NewUser.class);
+                startActivity(i);*/
+                break;
+            case R.id.button_remove:
+                if (listAdp.getCount() > 0) {
+                    user = (User) listAdp.getItem(0);
+                    //usersBdd.removeUserWithID(user.getId());
+                    //listAdp.remove(comment);
+                }
+                break;
+        }
+        List<User> userList = new ArrayList<>();
+        printUsersList(userList);
+
+        printUsersList(userList);
+        //listAdp.notifyDataSetChanged();
+    }
+
 }

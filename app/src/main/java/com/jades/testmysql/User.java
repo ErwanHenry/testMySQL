@@ -22,8 +22,8 @@ public class User {
 
     public User(String nom, String prenom){
 
-        this.nom = nom;
-        this.prenom = prenom;
+        setNom(nom);
+        setPrenom(prenom);
     }
 
 	public int getId() {

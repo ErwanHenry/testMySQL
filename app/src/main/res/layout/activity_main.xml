@@ -23,5 +23,26 @@
             />
 
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_add"
+            android:id="@+id/button_add"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_remove"
+            android:id="@+id/button_remove"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            />
+
+
+
     </LinearLayout>
 </RelativeLayout>
