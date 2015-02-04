@@ -4,6 +4,7 @@ package com.jades.testmysql;
  * Created by erwan on 28/01/2015.
  */
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -17,35 +18,33 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.os.AsyncTask;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
-public class getUsers extends Activity {
-   // TextView txt;
+public class GetUsersActivity extends Activity {
+    // TextView txt;
     ListView listView;
-    ListAdapter  listAdp;
+    ListAdapter listAdp;
     List<User> userList = new ArrayList<>();
+    public static final String strURL = "http://jadixor.com/mySQLtoAndroid.php";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
+
 /*
         LinearLayout rootLayout = new LinearLayout(getApplicationContext());
         txt = new TextView(getApplicationContext());
@@ -57,77 +56,52 @@ public class getUsers extends Activity {
         // Appeler la méthode pour récupérer les données JSON
        txt.setText(getServerData(strURL));
        */
-        getServerData();
+        new GetServerDataTask().execute(strURL,"nom","Henry");
+
     }
 
     // Mettre l'adresse du script PHP
     // Attention localhost ou 127.0.0.1 ne fonctionnent pas. Mettre l'adresse IP local.
-    public static final String strURL = "http://jadixor.com/mySQLtoAndroid.php";
 
-    private void getServerData(/*String returnString*/) {
-        InputStream is = null;
-        String result = "";
-        // Envoyer la requête au script PHP.
-        // Script PHP : $sql=mysql_query("select * from tblVille where Nom_ville like '".$_REQUEST['ville']."%'");
-        // $_REQUEST['ville'] sera remplacé par L dans notre exemple.
-        // Ce qui veut dire que la requête enverra les villes commençant par la lettre L
+
+    private List<User> getServerData(String valuePhp, String nom) throws IOException {
+
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs.add(new BasicNameValuePair("nom","Henry"));
+        nameValuePairs.add(new BasicNameValuePair(valuePhp, nom));
 
         // Envoie de la commande http
-        try{
+        try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(strURL);
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             HttpResponse response = httpclient.execute(httppost);
             HttpEntity entity = response.getEntity();
-            is = entity.getContent();
 
-        }catch(Exception e){
-            Log.e("log_tag", "Error in http connection " + e.toString());
-        }
+            String entityStr = EntityUtils.toString(entity, "UTF-8");
 
-        // Convertion de la requête en string
-        try{
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            is.close();
-            result=sb.toString();
-          Log.d(result,"ok");
-        }catch(Exception e){
-            Log.e("log_tag", "Error converting result " + e.toString());
-        }
-        // Parse les données JSON
-        // Parse les données JSON
-        try{
-            JSONArray jArray = new JSONArray(result);
 
-            for(int i=0;i<jArray.length();i++){
+            JSONArray jArray = new JSONArray(entityStr);
+
+            for (int i = 0; i < jArray.length(); i++) {
                 User userCurrent = new User();
                 JSONObject json_data = jArray.getJSONObject(i);
-                // Affichage ID_ville et Nom_ville dans le LogCat
-                /*Log.i("log_tag","id: "+json_data.getInt("id")+
-                                ", nom: "+json_data.getString("nom")
-                );*/
+
+
                 userCurrent.setId(json_data.getInt("id"));
                 userCurrent.setNom(json_data.getString("nom"));
                 userCurrent.setPrenom(json_data.getString("prenom"));
                 userCurrent.setStatut(json_data.getString("statut"));
                 userList.add(userCurrent);
-                /*returnString += "\n\t" + jArray.getJSONObject(i);*/
-            }
-           printUsersList(userList);
-            // Résultats de la requête
 
-        }catch(JSONException e){
-            Log.e("log_tag", "Error parsing data " + e.toString());
+            }
+            return userList;
+        } catch (IOException ioe) {
+            throw ioe;
+        } catch (Exception e) {
+            throw new IOException("Service problem", e);
         }
-        //return returnString;
     }
+
 
 
     public void printUsersList(List<User> userList){
@@ -143,7 +117,7 @@ public class getUsers extends Activity {
         User user = null;
         switch (view.getId()) {
             case R.id.button_add:
-               Intent i = new Intent(this, NewUser.class);
+               Intent i = new Intent(this, NewUserActivity.class);
                 startActivity(i);
                 break;
             case R.id.button_remove:
@@ -156,9 +130,23 @@ public class getUsers extends Activity {
         }
         List<User> userList = new ArrayList<>();
         printUsersList(userList);
-
-        printUsersList(userList);
-        //listAdp.notifyDataSetChanged();
     }
+
+
+
+    class GetServerDataTask extends AsyncTask<String,Void, String>
+    {
+
+            public String doInBackground (String...params)
+            {
+                try {
+                    printUsersList(getServerData(params[0], params[1]));
+                } catch (IOException ex) {
+                    Log.e("GetServerDataTask", "Failed !", ex);
+                }
+                return null;
+            }
+    }
+
 
 }
