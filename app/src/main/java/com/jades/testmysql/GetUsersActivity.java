@@ -27,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -55,7 +56,8 @@ public class GetUsersActivity extends Activity {
 
 
     protected void getServerData(String categorie, String value) throws IOException, JSONException {
-
+        User user = new User();
+        
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<>();
         Log.d("ok", "ok");
         nameValuePairs.add(new BasicNameValuePair(categorie, value));

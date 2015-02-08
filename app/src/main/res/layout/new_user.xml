@@ -40,7 +40,7 @@
             android:layout_marginTop="2sp"
             android:layout_marginBottom="2sp"/>
 
-        <TextView style="@style/WizardFormLabel"
+        <!--<TextView style="@style/WizardFormLabel"
             android:text="@string/label_password" />
 
         <EditText
@@ -51,31 +51,23 @@
             android:hint="@string/enter_password"
             android:id="@+id/newUserPassword"
             android:layout_marginTop="2sp"
-            android:layout_marginBottom="2sp"/>
+            android:layout_marginBottom="2sp"/>-->
 
         <TextView style="@style/WizardFormLabel"
-            android:text="@string/label_email" />
+            android:text="@string/label_statut" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:hint="@string/enter_email"
+            android:inputType="text"
+            android:hint="@string/enter_statut"
             android:ems="10"
-            android:id="@+id/newUserEmail"
+            android:id="@+id/newUserStatut"
             android:layout_marginTop="2sp"
             android:layout_marginBottom="2sp"/>
 
         <!--<TextView style="@style/WizardFormLabel"
             android:text="@string/label_birthdate" />-->
-        <DatePicker
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/newUserBirthdate"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="2sp"
-            android:layout_marginBottom="2sp"/>
-    </LinearLayout>
 
     <Button
         android:layout_width="fill_parent"
@@ -84,6 +76,8 @@
         android:id="@+id/button_finish"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_weight="1"/>
+
+        </LinearLayout>
 
 
 </LinearLayout>

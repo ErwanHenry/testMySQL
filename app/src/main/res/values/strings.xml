@@ -13,12 +13,12 @@
     <string name="enter_password">Entrez votre mot de passe</string>
     <string name="enter_first_name">Entrez votre prénom</string>
     <string name="enter_last_name">Entrez votre nom</string>
-    <string name="enter_email">Entrez votre email</string>
+    <string name="enter_statut">Entrez votre statut</string>
 
     <string name="label_password">Mot de passe</string>
     <string name="label_first_name">Prénom</string>
     <string name="label_last_name">Nom</string>
-    <string name="label_email">Email</string>
+    <string name="label_statut">Statut</string>
     <string name="label_birthdate">Date de naissance</string>
 
 </resources>
