@@ -21,10 +21,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -43,6 +45,7 @@ public class GetUsersActivity extends Activity {
 
         GetServerDataTask getServerDataTask = new GetServerDataTask();
         getServerDataTask.execute("nom", "Henry");
+        printUsersList(userList);
 
     }
 
@@ -81,7 +84,6 @@ public class GetUsersActivity extends Activity {
                 userList.add(userCurrent);
                 Log.d("ok", json_data.toString());
             }
-            printUsersList(userList);
 
         } catch (IOException ioe) {
             throw ioe;
@@ -100,7 +102,7 @@ public class GetUsersActivity extends Activity {
         return null;
     }
 
-    /*
+
         public void onClick(View view) {
             User user = null;
             switch (view.getId()) {
@@ -121,7 +123,7 @@ public class GetUsersActivity extends Activity {
         }
 
 
-    */
+
     class GetServerDataTask extends AsyncTask<String, String, Void> {
 
         public Void doInBackground(String... params) {

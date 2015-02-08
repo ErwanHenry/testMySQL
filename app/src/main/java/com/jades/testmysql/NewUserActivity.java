@@ -59,7 +59,6 @@ public class NewUserActivity extends Activity {
                // sendServerData();
                 Intent j = new Intent(this, GetUsersActivity.class);
                 startActivity(j);
-
                 break;
 
         }
